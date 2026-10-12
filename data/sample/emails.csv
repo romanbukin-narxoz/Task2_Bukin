@@ -1,0 +1,11 @@
+id,text,label
+s01,Win a free cash prize claim your money today,spam
+s02,Exclusive cash offer win a holiday prize now,spam
+s03,Claim free money and a bonus prize today,spam
+s04,Congratulations winner claim your cash reward,spam
+s05,Limited offer free prize click to claim money,spam
+h01,Please review the project meeting agenda for tomorrow,ham
+h02,The team meeting is scheduled for Monday morning,ham
+h03,Please send the project report before our meeting,ham
+h04,Your university lecture notes are attached for review,ham
+h05,Can we discuss the team project report tomorrow,ham
