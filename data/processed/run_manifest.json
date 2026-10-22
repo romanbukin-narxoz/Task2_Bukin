@@ -1,0 +1,73 @@
+{
+  "config": {
+    "mode": "smoke",
+    "data_path": "data/sample/emails.csv",
+    "output_dir": "results/task3_smoke/benchmark",
+    "test_size": 0.4,
+    "split_seed": 42,
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "train_fractions": [
+      0.25,
+      0.5,
+      1.0
+    ],
+    "max_fpr": 0.05,
+    "tfidf": {
+      "lowercase": true,
+      "ngram_range": [
+        1,
+        1
+      ],
+      "max_features": 5000,
+      "min_df": 1
+    },
+    "models": {
+      "naive_bayes": {
+        "alpha": 1.0
+      },
+      "logistic_regression": {
+        "C": 1.0,
+        "solver": "liblinear",
+        "max_iter": 1000
+      },
+      "random_forest": {
+        "n_estimators": 100,
+        "max_depth": null
+      }
+    }
+  },
+  "python": "3.12.10",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "processor": "AMD64 Family 25 Model 68 Stepping 0, AuthenticAMD",
+  "data_sha256": "69fbb6b44853955ccf269e29a5746631133cd9dfcfc59b114c3ce67895cc607c",
+  "versions": {
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "scikit-learn": "1.8.0",
+    "joblib": "1.5.3",
+    "threadpoolctl": "3.6.0"
+  },
+  "train_ids": [
+    "s04",
+    "h05",
+    "h02",
+    "s02",
+    "s03",
+    "h03"
+  ],
+  "test_ids": [
+    "h01",
+    "h04",
+    "s01",
+    "s05"
+  ],
+  "collected_at_utc": "2026-10-22T06:55:18.386960+00:00",
+  "warmup_policy": "One full pass with first seed, excluded from analysis",
+  "raw_log": "data\\raw\\test_run.jsonl"
+}

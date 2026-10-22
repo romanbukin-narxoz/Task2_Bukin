@@ -1,76 +1,53 @@
-# Comparative Evaluation of Machine Learning Algorithms for Spam Email Detection
+# Spam detection research Tasks 2 and 3
 
-## Authors
-Roman Bukin. Individual project for Research Methods, Task 2.
+Roman Bukin. Comparative Evaluation of Machine Learning Algorithms for Spam Email Detection.
 
-## Overview
-This repository continues Task 1 and provides a runnable measurement pipeline for Logistic Regression, Multinomial Naive Bayes and Random Forest. It measures spam-class F1, false positives and secondary metrics. The included artificial sample checks execution only. It does not establish algorithm quality.
+## Scope and data
 
-## Research Question
-How do algorithm choice and training-set size affect spam email classification performance and false positive rate under controlled conditions?
+Only the 10 artificial emails supplied in Task 2 were available. All numerical results below are smoke-test results, not evidence of real-world spam detection quality. A real-corpus experiment remains incomplete.
 
-## System Requirements
-Python 3.12 (tested with 3.12.14); Windows, Linux or macOS; internet access for initial dependency installation. A modest laptop is sufficient for the ten-row smoke test. Resource requirements for the full corpus depend on its size. All runtime packages, including transitive dependencies, are pinned in requirements.txt. Pip is the installer, not a benchmark dependency. A requirements-based environment is used under the rubric's allowed alternative; no Docker build is claimed.
+## Method
 
-## Quickstart Guide
-Download and extract the repository, open a terminal in its root folder, and run these three commands on Windows:
+Continue the Task 2 TF-IDF pipeline and compare Multinomial Naive Bayes (baseline), Logistic Regression and Random Forest. Use a fixed stratified holdout, paired seeds 42–46, and training fractions 25%, 50%, 100%. TF-IDF is fitted only on training emails. The sample uses the original 60/40 smoke split, not the planned 80/20 research split. Actual sample training sizes are 2, 2, 6; 25% and 50% select the same number of emails.
 
-```powershell
-py -3.12 -m venv .venv
-.venv\Scripts\python.exe -m pip install -r requirements.txt
-.venv\Scripts\python.exe src\benchmark.py
-```
+One complete warm-up pass with seed 42 is recorded separately. Nine warm-up rows are excluded; 45 benchmark rows remain. Timing values come from actual executions in the supplied runtime, not the student's PC. The manifest records the environment and input checksum. Re-running locally changes timing measurements.
 
-Linux and macOS:
+## Results & Discussion
 
-```bash
-python3.12 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
-.venv/bin/python src/benchmark.py
-```
+Full-training-pool results (five seed runs each):
 
-Expected success message: `OK: 3 benchmark rows saved to .../results/smoke` followed by the synthetic-sample warning. Output files: metrics.csv, predictions.csv, run_manifest.json. Outputs are local and ignored by Git. Re-running replaces the configured output files; choose a new output_dir to preserve a run. Exit code 0 means measurement completed; it does not mean all FPR guardrails passed. Check fpr_guardrail_pass in metrics.csv.
+| Model | Spam F1 mean [95% CI] | FPR mean [95% CI] | Fit ms mean ± SD | Prediction ms/email mean ± SD |
+|---|---|---|---|---|
+| logistic_regression | 0.800 [0.800, 0.800] | 0.500 [0.500, 0.500] | 1.584 ± 0.119 | 0.116 ± 0.027 |
+| naive_bayes (baseline) | 0.800 [0.800, 0.800] | 0.500 [0.500, 0.500] | 1.806 ± 0.280 | 0.112 ± 0.014 |
+| random_forest | 0.800 [0.800, 0.800] | 0.500 [0.500, 0.500] | 89.735 ± 3.133 | 1.620 ± 0.131 |
 
-## Repository Structure
-```text
-.
-├── README.md
-├── LICENSE
-├── .gitignore
-├── .python-version
-├── requirements.txt
-├── config.json
-├── configs/
-│   └── research.json
-├── src/
-│   └── benchmark.py
-├── data/
-│   └── sample/
-│       ├── emails.csv
-│       └── README.md
-└── docs/
-    ├── Methodology_Card.md
-    ├── dataset.md
-    ├── verification.md
-    └── START_HERE_RU.md
-```
+At full training size, 3 of 3 models fail the observed FPR guardrail in at least one seed run. This is a failed guardrail check, not successful validation of the threshold.
 
-## Planned Benchmarks
-| Benchmark | Algorithms | Training fractions | Seeds | Data | Purpose |
-|---|---|---|---|---|---|
-| Smoke test | NB, LR, RF | 100% of training pool | 42 | 10 artificial emails, 60/40 split | Verify execution; 3 metric rows |
-| Main experiment | NB, LR, RF | 25%, 50%, 100% | 42–46 | Licensed email corpus, fixed 80/20 split | Compare quality and training size; 45 metric rows |
+Confidence intervals use 5000 seed-level bootstrap resamples with seed 42. The processed CSV also reports medians, p95, SD and classification error rate. CI values describe variability between runs on the same holdout. They are not confidence intervals for population generalization or formal evidence that one algorithm is better. The p95 is across run-level batch averages, not individual-email latency.
 
-## Main Experiment
-Select and register the corpus using docs/dataset.md before Week 7. Put a cleaned CSV with id,text,label columns in data/private/emails.csv. Valid labels are ham and spam. Do not publish the private data. Run from the root:
+The sample contains only four test emails, including two ham emails. Therefore the false-positive guardrail is reported descriptively; it cannot establish a population FPR below 5%. Identical predictions can produce zero SD and zero-width bootstrap intervals. Five repeated seeds do not create five independent test sets. These results verify that the data-processing and export pipeline works. No real-world ranking or statistical superiority claim is made.
 
-```powershell
-.venv\Scripts\python.exe src\benchmark.py --config configs\research.json
-```
+## Figures
 
-The research configuration is prepared but cannot run until the real CSV exists. The same holdout is reused across models, fractions and seeds. TF-IDF is fitted only on training data. Exact normalized duplicates are rejected; near-duplicate and thread handling must be completed during dataset preparation. The methodology card defines the hypotheses, baseline, guardrails and later inference plan. Formal significance tests are not part of this measurement skeleton.
+Figure 1 shows prediction time against the fraction of the training pool, not concurrent server load. Figure 2 shows training-time distributions at 100% of the training pool; diamonds and error bars indicate bootstrap means and intervals. Figure 3 shows F1 and FPR. All figures have 300 DPI PNG and vector PDF versions, labeled units, distinguishable markers/line styles, and a colorblind-safe palette. Zero-width intervals may be hidden by markers.
 
-## Citation and License
-Suggested citation: Bukin, R. (2026). Comparative Evaluation of Machine Learning Algorithms for Spam Email Detection. Research Methods course project. Add the public repository URL and exact commit when citing a run.
+## Domain model
 
-Code and artificial sample: MIT, see LICENSE. A future research corpus retains its original licence. Methodological implementation reference: https://scikit-learn.org/stable/common_pitfalls.html
+See docs/domain_model.md for the training objective, model definitions, F1, FPR and variables.
+
+## Reproducibility and remaining work
+
+Raw data: data/raw/test_run.jsonl. Aggregates: data/processed/metrics_summary.csv. Environment and checksum: data/processed/run_manifest.json. Analysis: notebooks/01_data_analysis.ipynb. Repeat with python src/run_task3.py. The build host used fresh-process sequential IPython execution because local kernel sockets are unavailable; all code cells ran in order and their actual outputs were saved. Before submission, rerun with the standard Jupyter kernel on your computer to meet the Restart and Run All requirement.
+
+To complete the research, obtain and document a permitted real email corpus, remove duplicates and prevent thread leakage, store id,text,label CSV locally in data/private/emails.csv, then run python src/run_task3.py --config configs/research.json. Review regenerated results and report. No email text should be published without permission. No new literature review was fabricated; Task 1 references should be retained in the existing repository.
+
+## Plots
+
+![Figure 1](reports/figures/fig1_latency_vs_load.png)
+
+![Figure 2](reports/figures/fig2_distribution_boxplot.png)
+
+![Figure 3](reports/figures/fig3_quality.png)
+
+[Domain model](docs/domain_model.md) · [Executed notebook](notebooks/01_data_analysis.ipynb) · [Report for LMS](reports/Task3_Report.md) · [Russian instructions](START_TASK3_RU.md) · [Original Task 2 README](docs/README_Task2.md)
