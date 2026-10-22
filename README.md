@@ -4,7 +4,7 @@ Roman Bukin. Comparative Evaluation of Machine Learning Algorithms for Spam Emai
 
 ## Scope and data
 
-Only the 10 artificial emails supplied in Task 2 were available. All numerical results below are smoke-test results, not evidence of real-world spam detection quality. A real-corpus experiment remains incomplete.
+Research configuration executed. Check dataset documentation, licensing, deduplication and holdout design before interpreting these results.
 
 ## Method
 
@@ -18,11 +18,11 @@ Full-training-pool results (five seed runs each):
 
 | Model | Spam F1 mean [95% CI] | FPR mean [95% CI] | Fit ms mean ± SD | Prediction ms/email mean ± SD |
 |---|---|---|---|---|
-| logistic_regression | 0.800 [0.800, 0.800] | 0.500 [0.500, 0.500] | 1.584 ± 0.119 | 0.116 ± 0.027 |
-| naive_bayes (baseline) | 0.800 [0.800, 0.800] | 0.500 [0.500, 0.500] | 1.806 ± 0.280 | 0.112 ± 0.014 |
-| random_forest | 0.800 [0.800, 0.800] | 0.500 [0.500, 0.500] | 89.735 ± 3.133 | 1.620 ± 0.131 |
+| logistic_regression | 0.870 [0.870, 0.870] | 0.004 [0.004, 0.004] | 783.427 ± 16.848 | 0.558 ± 0.029 |
+| naive_bayes (baseline) | 0.813 [0.813, 0.813] | 0.000 [0.000, 0.000] | 787.743 ± 38.803 | 0.566 ± 0.062 |
+| random_forest | 0.896 [0.889, 0.904] | 0.002 [0.000, 0.003] | 1225.326 ± 34.186 | 0.606 ± 0.020 |
 
-At full training size, 3 of 3 models fail the observed FPR guardrail in at least one seed run. This is a failed guardrail check, not successful validation of the threshold.
+At full training size, 0 of 3 models fail the observed FPR guardrail in at least one seed run. This is a failed guardrail check, not successful validation of the threshold.
 
 Confidence intervals use 5000 seed-level bootstrap resamples with seed 42. The processed CSV also reports medians, p95, SD and classification error rate. CI values describe variability between runs on the same holdout. They are not confidence intervals for population generalization or formal evidence that one algorithm is better. The p95 is across run-level batch averages, not individual-email latency.
 
